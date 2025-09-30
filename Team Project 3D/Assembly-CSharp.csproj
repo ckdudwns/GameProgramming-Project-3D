@@ -62,10 +62,22 @@
     <Compile Include="Assets\Scripts\PlayerHealth.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerShooting.cs" />
+    <Compile Include="Assets\ThirdParty\BrokenVector\LowPolyDungeon\Demo Scenes\MouseCamLook.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
+    <Compile Include="Assets\ThirdParty\BrokenVector\LowPolyDungeon\Demo Scenes\ScreenshotMaker.cs" />
+    <Compile Include="Assets\ThirdParty\BrokenVector\LowPolyDungeon\Demo Scenes\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Coin.cs" />
     <Compile Include="Assets\Scripts\CollisionDebugger.cs" />
     <Compile Include="Assets\Scripts\HealthPack.cs" />
+    <Compile Include="Assets\Scripts\Gun.cs" />
+    <Compile Include="Assets\Scripts\Trap.cs" />
+    <Compile Include="Assets\Scripts\LootBox.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\ThirdParty\Lowpoly_Wasteland_Props\Readme\Readme.txt" />
+    <None Include="Assets\ThirdParty\Polyelercar\Simple Retro Car\README.txt" />
+    <None Include="Assets\ThirdParty\Polyeler\SimpleBuildingPack\README.txt" />
+    <None Include="Assets\ThirdParty\Attack Helicopter\Readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
