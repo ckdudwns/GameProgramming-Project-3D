@@ -2,11 +2,23 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    // 플레이어가 얻게 될 코인의 양
+    [Header("코인 설정")]
+    [Tooltip("플레이어가 얻게 될 코인의 양입니다.")]
     public int coinValue = 100;
 
-    // OnTriggerEnter만 남기고 Update 함수는 삭제했습니다.
-    // 이제 코인은 플레이어가 직접 부딪혀야만 획득됩니다.
+    [Header("회전 설정")]
+    [Tooltip("코인의 초당 회전 속도입니다.")]
+    public float rotationSpeed = 50f;
+
+    // 매 프레임마다 호출되는 함수
+    void Update()
+    {
+        // Y축(Vector3.up)을 기준으로 코인을 회전시킵니다.
+        // Time.deltaTime을 곱해줘서 프레임 속도와 상관없이 일정한 속도로 회전하게 합니다.
+        transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
+    }
+
+    // 플레이어의 콜라이더가 코인의 Trigger 영역에 들어왔을 때 호출됨
     private void OnTriggerEnter(Collider other)
     {
         // 들어온 대상이 플레이어인지 태그로 확인

@@ -82,9 +82,10 @@ public class EnemyHealth : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // 아이템 드롭 함수
+    // EnemyHealth.cs 스크립트의 DropItem 함수
     void DropItem()
     {
+        // 드롭할 아이템 목록이 비어있지 않은지 확인
         if (itemDrops != null && itemDrops.Length > 0)
         {
             int randomIndex = Random.Range(0, itemDrops.Length);
@@ -92,7 +93,21 @@ public class EnemyHealth : MonoBehaviour
 
             if (itemToDrop != null)
             {
-                Instantiate(itemToDrop, transform.position, Quaternion.identity);
+                // --- 여기가 수정된 핵심 부분입니다 ---
+                Vector3 dropPosition = transform.position; // 기본 드롭 위치는 적의 위치로 설정
+                RaycastHit hit;
+
+                // 적의 위치에서 아래(Vector3.down)로 100유닛만큼 광선을 쏴서 바닥을 찾음
+                if (Physics.Raycast(transform.position, Vector3.down, out hit, 100f))
+                {
+                    // 광선이 바닥에 닿았다면, 그 닿은 지점(hit.point)을 드롭 위치로 설정
+                    // 약간 위에서 생성해야 땅에 파묻히지 않으므로 Y값을 살짝 더해줌
+                    dropPosition = hit.point + new Vector3(0, 0.5f, 0);
+                }
+                // --- 여기까지 ---
+
+                // 계산된 최종 위치(dropPosition)에 아이템을 생성
+                Instantiate(itemToDrop, dropPosition, Quaternion.identity);
                 Debug.Log(itemToDrop.name + " 아이템을 드롭했습니다!");
             }
         }
