@@ -1,35 +1,42 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic; // List를 사용하기 위해 추가
+using UnityEngine.UI;             // UI(Image)를 사용하기 위해 추가
 
 public class PlayerShooting : MonoBehaviour
 {
     [Header("공통 설정")]
+    [Tooltip("총알이 판정되는 최대 사거리입니다.")]
     public float range = 100f;
 
     [Header("무기 설정")]
-    public List<Gun> availableGuns; // 보유하고 있는 총기 목록
-    public Transform gunHolder; // 총기 프리팹이 생성될 위치 (카메라의 자식)
-    private Gun currentGun; // 현재 장착하고 있는 총
+    [Tooltip("사용 가능한 총기들의 프리팹 목록입니다.")]
+    public List<Gun> availableGuns;
+    [Tooltip("총기 모델이 위치할 기준점입니다. 보통 카메라의 자식으로 만듭니다.")]
+    public Transform gunHolder;
+    private Gun currentGun; // 현재 장착하고 있는 총의 Gun.cs 스크립트
     private int currentGunIndex = -1;
 
     [Header("필수 연결 요소")]
+    [Tooltip("레이캐스트를 발사할 메인 카메라입니다.")]
     public Camera playerCamera;
+    [Tooltip("화면에 표시될 조준선 UI Image 컴포넌트입니다.")]
+    public Image crosshairImage;
 
-    // 탄약 및 상태 변수
-    private int currentAmmo;
+    // --- Private 변수 ---
+    private int currentAmmo; // 현재 총의 남은 총알 수
     private bool isReloading = false;
     private float nextTimeToFire = 0f;
-    private Player playerController;
+    private Player playerController; // Player.cs 스크립트를 저장할 변수
+    private Animator gunAnimator; // 현재 총의 애니메이터를 저장할 변수
 
     void Start()
     {
         playerController = GetComponent<Player>();
 
-        // 보유한 총이 있다면 첫 번째 총으로 시작
         if (availableGuns != null && availableGuns.Count > 0)
         {
-            EquipGun(0);
+            EquipGun(0); // 첫 번째 총으로 시작
         }
     }
 
@@ -37,13 +44,11 @@ public class PlayerShooting : MonoBehaviour
     {
         if (Player.isPaused) return;
 
-        // 무기 교체 입력 확인
         HandleWeaponSwitching();
 
-        // 현재 총이 없거나 재장전 중이면 발사/재장전 불가
         if (currentGun == null || isReloading) return;
 
-        // 발사 입력
+        // 발사 입력 (마우스 좌클릭)
         if (Input.GetMouseButton(0) && Time.time >= nextTimeToFire)
         {
             if (currentAmmo > 0)
@@ -53,34 +58,33 @@ public class PlayerShooting : MonoBehaviour
             }
         }
 
-        // 재장전 입력
-        if (Input.GetKeyDown(KeyCode.R))
+        // 재장전 입력 (R키), 탄창이 가득 차지 않았을 때
+        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < currentGun.maxAmmo)
         {
             StartCoroutine(Reload());
         }
     }
 
+    // 숫자키로 무기를 교체하는 함수
     void HandleWeaponSwitching()
     {
-        // 숫자 키 1~9 입력 확인
         for (int i = 1; i <= 9; i++)
         {
             if (Input.GetKeyDown(KeyCode.Alpha0 + i))
             {
-                // 인덱스는 0부터 시작하므로 i-1
-                // 보유한 총의 개수보다 작고, 현재 들고 있는 총과 다른 총일 때만 교체
-                if (i - 1 < availableGuns.Count && i - 1 != currentGunIndex)
+                int targetIndex = i - 1;
+                if (targetIndex < availableGuns.Count && targetIndex != currentGunIndex)
                 {
-                    EquipGun(i - 1);
+                    EquipGun(targetIndex);
                 }
                 break;
             }
         }
     }
 
+    // 지정된 인덱스의 총을 장착하는 함수
     void EquipGun(int gunIndex)
     {
-        // 이미 진행 중인 재장전이 있다면 중단
         if (isReloading)
         {
             StopAllCoroutines();
@@ -89,36 +93,67 @@ public class PlayerShooting : MonoBehaviour
 
         currentGunIndex = gunIndex;
 
-        // 기존에 들고 있던 총 오브젝트 파괴
         if (gunHolder.childCount > 0)
         {
             Destroy(gunHolder.GetChild(0).gameObject);
         }
 
-        // 새로운 총 프리팹을 gunHolder 자식으로 생성
         Gun newGunPrefab = availableGuns[gunIndex];
         GameObject newGunObject = Instantiate(newGunPrefab.gameObject, gunHolder.position, gunHolder.rotation, gunHolder);
         currentGun = newGunObject.GetComponent<Gun>();
 
-        // 새 총의 정보로 탄약 초기화
+        // 새로 생성된 총 오브젝트에서 Animator 컴포넌트를 찾음
+        gunAnimator = newGunObject.GetComponent<Animator>();
+
+        if (currentGun != null)
+        {
+            newGunObject.transform.localPosition = currentGun.positionOffset;
+            newGunObject.transform.localEulerAngles = currentGun.rotationOffset;
+        }
+
         currentAmmo = currentGun.maxAmmo;
         Debug.Log(currentGun.gunName + "으로 교체! 탄약: " + currentAmmo + "/" + currentGun.maxAmmo);
+
+        if (crosshairImage != null)
+        {
+            if (currentGun.crosshairSprite != null)
+            {
+                crosshairImage.sprite = currentGun.crosshairSprite;
+                crosshairImage.enabled = true;
+            }
+            else
+            {
+                crosshairImage.enabled = false;
+            }
+        }
     }
 
+    // 재장전 코루틴
     IEnumerator Reload()
     {
         isReloading = true;
         Debug.Log(currentGun.gunName + " 장전 중...");
+
+        // 애니메이터가 있다면 "Reload" 트리거를 발동시켜 애니메이션 재생
+        if (gunAnimator != null)
+        {
+            gunAnimator.SetTrigger("Reload");
+        }
+
         yield return new WaitForSeconds(currentGun.reloadTime);
+
         currentAmmo = currentGun.maxAmmo;
         Debug.Log("장전 완료! 남은 총알: " + currentAmmo);
         isReloading = false;
     }
 
+    // 발사 함수
     void Shoot()
     {
+        // --- 여기가 추가된 부분입니다 ---
+        Debug.Log("총알 발사! 남은 총알: " + (currentAmmo - 1) + " / " + currentGun.maxAmmo);
+        // --- 여기까지 ---
         currentAmmo--;
-        Debug.Log("총알 발사! 남은 총알: " + currentAmmo + " / " + currentGun.maxAmmo);
 
         // 반동 적용 로직
         if (playerController != null)
@@ -151,6 +186,7 @@ public class PlayerShooting : MonoBehaviour
             targetPoint = playerCamera.transform.position + playerCamera.transform.forward * range;
         }
 
+        // 총알 프리팹 생성
         if (currentGun.bulletPrefab != null && currentGun.firePoint != null)
         {
             Vector3 direction = targetPoint - currentGun.firePoint.position;
