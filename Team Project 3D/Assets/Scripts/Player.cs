@@ -1,29 +1,29 @@
-ï»¿using UnityEngine;
+using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 public class Player : MonoBehaviour
 {
-    [Header("ëŠ¥ë ¥ì¹˜ ì„¤ì •")]
-    public int currentCoins; // í˜„ì¬ ì½”ì¸ (publicìœ¼ë¡œ ë³€ê²½í•˜ì—¬ Inspectorì—ì„œ í™•ì¸ ê°€ëŠ¥)
+    [Header("´É·ÂÄ¡ ¼³Á¤")]
+    public int currentCoins; // ÇöÀç ÄÚÀÎ (publicÀ¸·Î º¯°æÇÏ¿© Inspector¿¡¼­ È®ÀÎ °¡´É)
 
-Â  Â  [Header("ì´ë™ ì†ë„")]
+    [Header("ÀÌµ¿ ¼Óµµ")]
     public float moveSpeed = 6.0f;
     public float sprintSpeed = 10.0f;
 
-    [Header("ì•‰ê¸° ì„¤ì •")]
+    [Header("¾É±â ¼³Á¤")]
     public float crouchSpeed = 3.0f;
     public float standingHeight = 2.0f;
     public float crouchingHeight = 1.0f;
 
-    [Header("ì í”„ ë†’ì´")]
+    [Header("Á¡ÇÁ ³ôÀÌ")]
     public float jumpHeight = 1.0f;
-    [Header("ì¤‘ë ¥ ê°’")]
+    [Header("Áß·Â °ª")]
     public float gravityValue = -9.81f;
 
-    [Header("ë§ˆìš°ìŠ¤ ê°ë„")]
+    [Header("¸¶¿ì½º °¨µµ")]
     public float mouseSensitivity = 2.0f;
 
-    [Header("ì¹´ë©”ë¼ ì˜¤ë¸Œì íŠ¸")]
+    [Header("Ä«¸Ş¶ó ¿ÀºêÁ§Æ®")]
     public Transform playerCamera;
 
     private CharacterController controller;
@@ -37,30 +37,30 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-Â  Â  Â  Â  // --- 1. ì‹œì‘ ì‹œ ì½”ì¸ ì„¤ì • ë° ë¡œê·¸ ì¶œë ¥ ---
-Â  Â  Â  Â  currentCoins = 1000;
-Â  Â  Â  Â  // í˜„ì¬ ë³´ìœ  ì½”ì¸ì„ ë¡œê·¸ë¡œ ì¶œë ¥
-Â  Â  Â  Â  Debug.Log("ê²Œì„ ì‹œì‘! í˜„ì¬ ë³´ìœ  ì½”ì¸: " + currentCoins);
-Â  Â  Â  Â  // --- ì—¬ê¸°ê¹Œì§€ ---
+        // --- 1. ½ÃÀÛ ½Ã ÄÚÀÎ ¼³Á¤ ¹× ·Î±× Ãâ·Â ---
+        currentCoins = 1000;
+        // ÇöÀç º¸À¯ ÄÚÀÎÀ» ·Î±×·Î Ãâ·Â
+        Debug.Log("°ÔÀÓ ½ÃÀÛ! ÇöÀç º¸À¯ ÄÚÀÎ: " + currentCoins);
+        // --- ¿©±â±îÁö ---
 
-Â  Â  Â  Â  controller = GetComponent<CharacterController>();
+        controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         controller.height = standingHeight;
     }
 
-Â  Â  // ì½”ì¸ì„ ì¶”ê°€í•˜ê³  ë¡œê·¸ë¥¼ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
-Â  Â  public void AddCoins(int amount)
+    // ÄÚÀÎÀ» Ãß°¡ÇÏ°í ·Î±×¸¦ Ãâ·ÂÇÏ´Â ÇÔ¼ö
+    public void AddCoins(int amount)
     {
         currentCoins += amount;
-Â  Â  Â  Â  // --- 2. ì½”ì¸ íšë“ ì‹œ ë¡œê·¸ ì¶œë ¥ ---
-Â  Â  Â  Â  // íšë“í•œ ì½”ì¸ê³¼ í•¨ê»˜ í˜„ì¬ ì´ ë³´ìœ  ì½”ì¸ì„ ë¡œê·¸ë¡œ ì¶œë ¥
-Â  Â  Â  Â  Debug.Log(amount + " ì½”ì¸ íšë“! í˜„ì¬ ë³´ìœ  ì½”ì¸: " + currentCoins);
-Â  Â  Â  Â  // --- ì—¬ê¸°ê¹Œì§€ ---
-Â  Â  }
+        // --- 2. ÄÚÀÎ È¹µæ ½Ã ·Î±× Ãâ·Â ---
+        // È¹µæÇÑ ÄÚÀÎ°ú ÇÔ²² ÇöÀç ÃÑ º¸À¯ ÄÚÀÎÀ» ·Î±×·Î Ãâ·Â
+        Debug.Log(amount + " ÄÚÀÎ È¹µæ! ÇöÀç º¸À¯ ÄÚÀÎ: " + currentCoins);
+        // --- ¿©±â±îÁö ---
+    }
 
-Â  Â  // --- ì´í•˜ ì½”ë“œëŠ” ì´ì „ê³¼ ë™ì¼í•©ë‹ˆë‹¤ ---
-Â  Â  void Update()
+    // --- ÀÌÇÏ ÄÚµå´Â ÀÌÀü°ú µ¿ÀÏÇÕ´Ï´Ù ---
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) TogglePause();
         if (isPaused) return;
