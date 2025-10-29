@@ -449,7 +449,7 @@ MonoBehaviour:
   gunName: Rifle
   damage: 10
   maxAmmo: 30
-  reloadTime: 1.5
+  reloadTime: 1
   fireRate: 10
   normalRecoil: 1.5
   crouchingRecoil: 0.2
@@ -471,7 +471,7 @@ Animator:
   m_GameObject: {fileID: 2260168436396868379}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2a6ee8668a69f5941a99fc2c6e64ea82, type: 2}
+  m_Controller: {fileID: 9100000, guid: 394e05f2c55d599478e5b7901a6b6c4b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
