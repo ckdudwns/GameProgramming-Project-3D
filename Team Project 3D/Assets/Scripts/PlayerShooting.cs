@@ -1,43 +1,48 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic; // List를 사용하기 위해 추가
-using UnityEngine.UI;             // UI(Image)를 사용하기 위해 추가
+using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class PlayerShooting : MonoBehaviour
 {
     [Header("공통 설정")]
-    [Tooltip("총알이 판정되는 최대 사거리입니다.")]
     public float range = 100f;
 
     [Header("무기 설정")]
-    [Tooltip("사용 가능한 총기들의 프리팹 목록입니다.")]
     public List<Gun> availableGuns;
-    [Tooltip("총기 모델이 위치할 기준점입니다. 보통 카메라의 자식으로 만듭니다.")]
     public Transform gunHolder;
-    private Gun currentGun; // 현재 장착하고 있는 총의 Gun.cs 스크립트
+    private Gun currentGun;
     private int currentGunIndex = -1;
 
+    [Header("조준 설정")]
+    public float zoomedFOV = 15f;
+    private float normalFOV;
+
     [Header("필수 연결 요소")]
-    [Tooltip("레이캐스트를 발사할 메인 카메라입니다.")]
     public Camera playerCamera;
-    [Tooltip("화면에 표시될 조준선 UI Image 컴포넌트입니다.")]
     public Image crosshairImage;
+    public GameObject scopeOverlay;
 
     // --- Private 변수 ---
-    private int currentAmmo; // 현재 총의 남은 총알 수
+    private int currentAmmo;
     private bool isReloading = false;
     private float nextTimeToFire = 0f;
-    private Player playerController; // Player.cs 스크립트를 저장할 변수
-    private Animator gunAnimator; // 현재 총의 애니메이터를 저장할 변수
+    private Player playerController;
+    private Animator gunAnimator;
+    private bool isAiming = false;
+    private static readonly int IsAimingHash = Animator.StringToHash("IsAiming");
 
     void Start()
     {
         playerController = GetComponent<Player>();
+        normalFOV = playerCamera.fieldOfView;
 
         if (availableGuns != null && availableGuns.Count > 0)
         {
-            EquipGun(0); // 첫 번째 총으로 시작
+            EquipGun(0);
         }
+        if (scopeOverlay != null)
+            scopeOverlay.SetActive(false);
     }
 
     void Update()
@@ -46,7 +51,17 @@ public class PlayerShooting : MonoBehaviour
 
         HandleWeaponSwitching();
 
-        if (currentGun == null || isReloading) return;
+        if (currentGun == null) return;
+
+        // --- 수정된 부분 ---
+        // 현재 총이 '조준 가능(isScopable)'할 때만 조준 입력을 받습니다.
+        if (currentGun.isScopable)
+        {
+            HandleAimingInput();
+        }
+        // --- 여기까지 ---
+
+        if (isReloading) return;
 
         // 발사 입력 (마우스 좌클릭)
         if (Input.GetMouseButton(0) && Time.time >= nextTimeToFire)
@@ -58,14 +73,55 @@ public class PlayerShooting : MonoBehaviour
             }
         }
 
-        // 재장전 입력 (R키), 탄창이 가득 차지 않았을 때
-        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < currentGun.maxAmmo)
+        // 재장전 입력 (R키)
+        if (!isAiming && Input.GetKeyDown(KeyCode.R) && currentAmmo < currentGun.maxAmmo)
         {
             StartCoroutine(Reload());
         }
     }
 
-    // 숫자키로 무기를 교체하는 함수
+    // 조준 입력 처리 함수 (토글 방식)
+    void HandleAimingInput()
+    {
+        if (Input.GetMouseButtonDown(1)) // 우클릭 감지
+        {
+            if (isReloading) return; // 재장전 중 조준 불가
+
+            isAiming = !isAiming; // 조준 상태 토글
+
+            if (gunAnimator != null)
+            {
+                gunAnimator.SetBool(IsAimingHash, isAiming);
+            }
+
+            if (isAiming)
+            {
+                // 조준 시작: 스코프 보이기, 조준선 숨기기, 줌인
+                if (scopeOverlay != null) scopeOverlay.SetActive(true);
+                if (crosshairImage != null) crosshairImage.enabled = false;
+                playerCamera.fieldOfView = zoomedFOV;
+            }
+            else
+            {
+                // 조준 해제: 스코프 숨기기, 조준선 보이기, 줌아웃
+                OnUnaim();
+            }
+        }
+    }
+
+    // --- 조준 해제 시 호출할 함수를 따로 만듭니다 ---
+    void OnUnaim()
+    {
+        if (scopeOverlay != null) scopeOverlay.SetActive(false);
+        // 현재 총에 조준선 이미지가 설정되어 있다면 다시 보이기
+        if (crosshairImage != null && currentGun != null && currentGun.crosshairSprite != null)
+        {
+            crosshairImage.enabled = true;
+        }
+        playerCamera.fieldOfView = normalFOV;
+    }
+
+
     void HandleWeaponSwitching()
     {
         for (int i = 1; i <= 9; i++)
@@ -82,7 +138,6 @@ public class PlayerShooting : MonoBehaviour
         }
     }
 
-    // 지정된 인덱스의 총을 장착하는 함수
     void EquipGun(int gunIndex)
     {
         if (isReloading)
@@ -90,6 +145,15 @@ public class PlayerShooting : MonoBehaviour
             StopAllCoroutines();
             isReloading = false;
         }
+
+        // --- 수정된 부분 ---
+        // 무기를 바꿀 때, 이전에 조준 상태였다면 강제로 조준 해제
+        if (isAiming)
+        {
+            isAiming = false;
+            OnUnaim(); // UI 및 FOV 즉시 복구
+        }
+        // --- 여기까지 ---
 
         currentGunIndex = gunIndex;
 
@@ -101,9 +165,9 @@ public class PlayerShooting : MonoBehaviour
         Gun newGunPrefab = availableGuns[gunIndex];
         GameObject newGunObject = Instantiate(newGunPrefab.gameObject, gunHolder.position, gunHolder.rotation, gunHolder);
         currentGun = newGunObject.GetComponent<Gun>();
-
-        // 새로 생성된 총 오브젝트에서 Animator 컴포넌트를 찾음
         gunAnimator = newGunObject.GetComponent<Animator>();
+
+        if (gunAnimator != null) gunAnimator.SetBool(IsAimingHash, false);
 
         if (currentGun != null)
         {
@@ -113,7 +177,6 @@ public class PlayerShooting : MonoBehaviour
 
         currentAmmo = currentGun.maxAmmo;
         Debug.Log(currentGun.gunName + "으로 교체! 탄약: " + currentAmmo + "/" + currentGun.maxAmmo);
-
         if (crosshairImage != null)
         {
             if (currentGun.crosshairSprite != null)
@@ -128,13 +191,11 @@ public class PlayerShooting : MonoBehaviour
         }
     }
 
-    // 재장전 코루틴
     IEnumerator Reload()
     {
         isReloading = true;
         Debug.Log(currentGun.gunName + " 장전 중...");
 
-        // 애니메이터가 있다면 "Reload" 트리거를 발동시켜 애니메이션 재생
         if (gunAnimator != null)
         {
             gunAnimator.SetTrigger("Reload");
@@ -147,15 +208,10 @@ public class PlayerShooting : MonoBehaviour
         isReloading = false;
     }
 
-    // 발사 함수
     void Shoot()
     {
-        // --- 여기가 추가된 부분입니다 ---
-        Debug.Log("총알 발사! 남은 총알: " + (currentAmmo - 1) + " / " + currentGun.maxAmmo);
-        // --- 여기까지 ---
         currentAmmo--;
 
-        // 반동 적용 로직
         if (playerController != null)
         {
             float currentRecoil = currentGun.normalRecoil;
@@ -164,29 +220,101 @@ public class PlayerShooting : MonoBehaviour
             playerController.ApplyRecoil(currentRecoil);
         }
 
-        // 레이캐스트 및 시각 효과 로직
-        RaycastHit hit;
-        Vector3 targetPoint;
-        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, range))
+        if (currentGun.fireMode == FireMode.Spread)
         {
-            targetPoint = hit.point;
-            EnemyHealth enemy = hit.transform.GetComponentInParent<EnemyHealth>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(currentGun.damage);
-                if (currentGun.bloodImpactPrefab != null) Instantiate(currentGun.bloodImpactPrefab, hit.point, Quaternion.LookRotation(hit.normal));
-            }
-            else
-            {
-                if (currentGun.genericImpactPrefab != null) Instantiate(currentGun.genericImpactPrefab, hit.point, Quaternion.LookRotation(hit.normal));
-            }
+            FireSpreadShot();
         }
         else
         {
-            targetPoint = playerCamera.transform.position + playerCamera.transform.forward * range;
+            FireSingleShot();
+        }
+    }
+
+    // 단발(Single) 또는 연사(Auto)용 발사 함수
+    void FireSingleShot()
+    {
+        RaycastHit hit;
+        Vector3 rayOrigin = playerCamera.transform.position;
+        Vector3 rayDirection = playerCamera.transform.forward;
+
+        // 조준 중이 아닐 때만 탄 퍼짐 적용 (선택적)
+        if (!isAiming && currentGun.spreadAngle > 0)
+        {
+            Vector2 spread = Random.insideUnitCircle * currentGun.spreadAngle;
+            rayDirection = Quaternion.Euler(spread.x, spread.y, 0) * rayDirection;
+        }
+
+        Vector3 targetPoint;
+        // 레이캐스트 사거리를 currentGun.range로 변경
+        if (Physics.Raycast(rayOrigin, rayDirection, out hit, currentGun.range))
+        {
+            targetPoint = hit.point;
+            HandleHit(hit, currentGun.damage); // 피격 처리 함수 호출
+        }
+        else
+        {
+            // --- 여기가 수정된 부분입니다 ---
+            targetPoint = rayOrigin + (rayDirection * currentGun.range);
+            // --- 여기까지 ---
         }
 
         // 총알 프리팹 생성
+        SpawnBulletVisual(targetPoint);
+    }
+
+    // 샷건(Spread)용 발사 함수
+    void FireSpreadShot()
+    {
+        // 설정된 펠릿 개수만큼 반복
+        for (int i = 0; i < currentGun.projectilesPerShot; i++)
+        {
+            RaycastHit hit;
+            Vector3 rayOrigin = playerCamera.transform.position;
+            Vector3 rayDirection = playerCamera.transform.forward;
+
+            // 샷건은 항상 탄 퍼짐 적용
+            Vector2 spread = Random.insideUnitCircle * currentGun.spreadAngle;
+            rayDirection = Quaternion.Euler(spread.x, spread.y, 0) * rayDirection;
+
+            Vector3 targetPoint;
+            // 레이캐스트 사거리를 currentGun.range로 변경
+            if (Physics.Raycast(rayOrigin, rayDirection, out hit, currentGun.range))
+                {
+                targetPoint = hit.point;
+                HandleHit(hit, currentGun.damage); // 피격 처리 함수 호출
+            }
+            else
+            {
+                // --- 여기가 수정된 부분입니다 ---
+                targetPoint = rayOrigin + (rayDirection * currentGun.range);
+                // --- 여기까지 ---
+            }
+
+            // 총알(펠릿) 프리팹 생성
+            SpawnBulletVisual(targetPoint);
+        }
+    }
+
+    // 피격 처리를 담당하는 별도 함수
+    void HandleHit(RaycastHit hit, int damageToDeal)
+    {
+        EnemyHealth enemy = hit.transform.GetComponentInParent<EnemyHealth>();
+        if (enemy != null)
+        {
+            enemy.TakeDamage(damageToDeal);
+            if (currentGun.bloodImpactPrefab != null)
+                Instantiate(currentGun.bloodImpactPrefab, hit.point, Quaternion.LookRotation(hit.normal));
+        }
+        else
+        {
+            if (currentGun.genericImpactPrefab != null)
+                Instantiate(currentGun.genericImpactPrefab, hit.point, Quaternion.LookRotation(hit.normal));
+        }
+    }
+
+    // 총알 프리팹 생성 로직
+    void SpawnBulletVisual(Vector3 targetPoint)
+    {
         if (currentGun.bulletPrefab != null && currentGun.firePoint != null)
         {
             Vector3 direction = targetPoint - currentGun.firePoint.position;
