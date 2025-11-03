@@ -3,11 +3,15 @@
   "WorkspaceRootPath": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{87136AD7-64D8-8E13-6B52-A63A034646D4}|Assembly-CSharp.csproj|C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\assets\\scripts\\playershooting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{041C8B5D-EF77-A1A9-7985-291350878F97}|OccaSoftware.Crosshairs.Editor.csproj|c:\\users\\cha\\downloads\\gameprogramming-project-3d-main (2)\\gameprogramming-project-3d-main\\team project 3d\\assets\\thirdparty\\occasoftware\\crosshairs\\editor\\startmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{041C8B5D-EF77-A1A9-7985-291350878F97}|OccaSoftware.Crosshairs.Editor.csproj|solutionrelative:assets\\thirdparty\\occasoftware\\crosshairs\\editor\\startmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{87136AD7-64D8-8E13-6B52-A63A034646D4}|Assembly-CSharp.csproj|c:\\users\\cha\\downloads\\gameprogramming-project-3d-main (2)\\gameprogramming-project-3d-main\\team project 3d\\assets\\scripts\\playershooting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{87136AD7-64D8-8E13-6B52-A63A034646D4}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playershooting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{87136AD7-64D8-8E13-6B52-A63A034646D4}|Assembly-CSharp.csproj|c:\\users\\cha\\downloads\\gameprogramming-project-3d-main (2)\\gameprogramming-project-3d-main\\team project 3d\\assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{87136AD7-64D8-8E13-6B52-A63A034646D4}|Assembly-CSharp.csproj|C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{87136AD7-64D8-8E13-6B52-A63A034646D4}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -62,11 +66,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
+              "Title": "StartMenu.cs",
+              "DocumentMoniker": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\ThirdParty\\OccaSoftware\\Crosshairs\\Editor\\StartMenu.cs",
+              "RelativeDocumentMoniker": "Assets\\ThirdParty\\OccaSoftware\\Crosshairs\\Editor\\StartMenu.cs",
+              "ToolTip": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\ThirdParty\\OccaSoftware\\Crosshairs\\Editor\\StartMenu.cs",
+              "RelativeToolTip": "Assets\\ThirdParty\\OccaSoftware\\Crosshairs\\Editor\\StartMenu.cs",
+              "ViewState": "AgIAAIcAAAAAAAAAAAAAAJ0AAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-01T10:33:43.385Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "LootBox.cs",
               "DocumentMoniker": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\Scripts\\LootBox.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\LootBox.cs",
@@ -78,7 +95,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "Trap.cs",
               "DocumentMoniker": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\Scripts\\Trap.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Trap.cs",
@@ -90,7 +107,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Gun.cs",
               "DocumentMoniker": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\Scripts\\Gun.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gun.cs",
@@ -102,7 +119,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "HealthPack.cs",
               "DocumentMoniker": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\Scripts\\HealthPack.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\HealthPack.cs",
@@ -114,7 +131,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "Coin.cs",
               "DocumentMoniker": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\Scripts\\Coin.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Coin.cs",
@@ -126,7 +143,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "CollisionDebugger.cs",
               "DocumentMoniker": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\Scripts\\CollisionDebugger.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\CollisionDebugger.cs",
@@ -138,7 +155,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "Bullet.cs",
               "DocumentMoniker": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\Scripts\\Bullet.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Bullet.cs",
@@ -150,7 +167,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "EnemyHealth.cs",
               "DocumentMoniker": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\Scripts\\EnemyHealth.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\EnemyHealth.cs",
@@ -162,7 +179,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "PlayerShooting.cs",
               "DocumentMoniker": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\Scripts\\PlayerShooting.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerShooting.cs",
@@ -175,7 +192,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "EnemyHitbox.cs",
               "DocumentMoniker": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\Scripts\\EnemyHitbox.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\EnemyHitbox.cs",
@@ -187,7 +204,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "PlayerHealth.cs",
               "DocumentMoniker": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\Scripts\\PlayerHealth.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerHealth.cs",
@@ -199,7 +216,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Player.cs",
               "DocumentMoniker": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\Scripts\\Player.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Player.cs",
@@ -207,12 +224,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Player.cs",
               "ViewState": "AgIAAFAAAAAAAAAAAAAiwJAAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-23T00:22:39.158Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-23T00:22:39.158Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "Enemy.cs",
               "DocumentMoniker": "C:\\Users\\CHA\\Downloads\\GameProgramming-Project-3D-main (2)\\GameProgramming-Project-3D-main\\Team Project 3D\\Assets\\Scripts\\Enemy.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Enemy.cs",
